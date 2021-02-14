@@ -3,7 +3,6 @@ import KEY_INPUTS from "../../Constants/KeyInputs.json";
 
 export default class InputController {
     private static _activeInputs: Set<string> = new Set([]);
-    private static _instance: InputController;
 
     private constructor() {
     }
