@@ -1,8 +1,9 @@
+import Vector from "../../Vector/Vector";
 import GameObject from "../GameObjectImpl";
 
 export default class EmptyGameObject extends GameObject {
-    constructor(x: number, y: number, width: number, height: number) {
-        super(x, y, width, height);
+    constructor(position: Vector) {
+        super(position, new Vector(0, 0));
     }
 
     /**

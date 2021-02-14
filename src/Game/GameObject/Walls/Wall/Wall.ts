@@ -1,8 +1,9 @@
+import Vector from "../../../Vector/Vector";
 import GameObject from "../../GameObjectImpl";
 
 export default class Wall extends GameObject {
-    constructor(x: number, y: number, width: number, height: number) {
-        super(x, y, width, height);
+    constructor(position: Vector, scale: Vector) {
+        super(position, scale);
     }
 
     /**
@@ -23,10 +24,10 @@ export default class Wall extends GameObject {
      */
     renderThis(context: any): void {
         context.fillRect(
-            this.x - this.width / 2,
-            this.y - this.height / 2,
-            this.width,
-            this.height
+            this.position.x - this.scale.x / 2,
+            this.position.y - this.scale.y / 2,
+            this.scale.x,
+            this.scale.y
         );
     }
 }

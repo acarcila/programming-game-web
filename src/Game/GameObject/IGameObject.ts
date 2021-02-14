@@ -1,3 +1,5 @@
+import Vector from "../Vector/Vector";
+
 /**
  * Game object interface
  */
@@ -41,16 +43,15 @@ export default interface IGameObject {
     addChild(child: IGameObject): void;
 
     /**
-     * Move deltaX pixels in the X axis and deltaY in the Y axis
-     * @param deltaX number of pixels to move in the X axis
-     * @param deltaY number of pixels to move in the Y axis
+     * Moves the object in a vector direction with a given speed
+     * @param deltaVector vector of the direction to move the object
+     * @param speed number of pixels to move in each direction
      */
-    moveTo(deltaX: number, deltaY: number, velocity: number): void;
+    moveTo(deltaVector: Vector, speed: number): void;
 
     /**
-     * Sets the position of the game object
-     * @param x position in the X axis
-     * @param y position in the Y axis
+     * Moves the object in a vector direction
+     * @param toMoveVector vector to move to
      */
-    setPosition(x: number, y: number): void;
+    moveTo(toMoveVector: Vector): void;
 }

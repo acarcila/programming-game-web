@@ -1,52 +1,60 @@
+import GameInormation from "../GameInformation/GameInformation";
+import Vector from "../Vector/Vector";
 import IGameObject from "./IGameObject";
 
 /**
  * Game object abstract class
  */
 export default abstract class GameObject implements IGameObject {
-    private _x: number;
-    private _y: number;
-    private _width: number;
-    private _height: number;
-    private children: GameObject[];
-    constructor(x: number, y: number, width: number, height: number) {
-        this._x = x;
-        this._y = y;
-        this._width = width;
-        this._height = height;
-        this.children = [];
+    private _position: Vector;
+    private _scale: Vector;
+    private _velocity: Vector;
+    private _children: GameObject[];
+    constructor(position: Vector, scale: Vector) {
+        this._position = position;
+        this._scale = scale;
+        this._velocity = new Vector(0, 0);
+        this._children = [];
     }
 
-    get x(): number {
-        return this._x;
+    public get position(): Vector {
+        return this._position;
     }
 
-    set x(x: number) {
-        this._y = x;
+    public set position(value: Vector) {
+        const deltaVector: Vector = Vector.substractVectors(
+            value,
+            this.position
+        );
+
+        this._position = value;
+        this.children.forEach((child: GameObject) => {
+            child.position = Vector.addVectors(child.position, deltaVector);
+        });
     }
 
-    get y(): number {
-        return this._y;
+    public get scale(): Vector {
+        return this._scale;
     }
 
-    set y(y: number) {
-        this._y = y;
+    public set scale(value: Vector) {
+        this._scale = value;
     }
 
-    get width(): number {
-        return this._width;
+    public get velocity(): Vector {
+        return this._velocity;
     }
 
-    set width(width) {
-        this._width = width;
+    public set velocity(value: Vector) {
+        this._velocity = value;
     }
 
-    get height(): number {
-        return this._height;
+    public get children(): GameObject[] {
+        return this._children;
     }
 
-    set height(height) {
-        this._height = height;
+    public set children(value: GameObject[]) {
+        this._children = value;
     }
 
     /**
@@ -57,6 +65,8 @@ export default abstract class GameObject implements IGameObject {
         this.children.forEach((child) => {
             child.setUp();
         });
+
+        console.log(this);
     }
 
     /**
@@ -68,6 +78,13 @@ export default abstract class GameObject implements IGameObject {
      * function that is called at every frame and updates this and the children
      */
     public update(): void {
+        if (GameInormation.fps >= 1) {
+            this.moveTo(
+                this.velocity,
+                this.velocity.getMagnitude() / GameInormation.fps
+            );
+        }
+
         this.updateThis();
         this.children.forEach((child) => {
             child.update();
@@ -105,32 +122,22 @@ export default abstract class GameObject implements IGameObject {
     }
 
     /**
-     * Move deltaX pixels in the X axis and deltaY in the Y axis
-     * @param deltaX number of pixels to move in the X axis
-     * @param deltaY number of pixels to move in the Y axis
+     * Moves the object in a vector direction with a given speed
+     * @param deltaVector vector of the direction to move the object
+     * @param speed number of pixels to move in each direction
      */
-    public moveTo(deltaX: number, deltaY: number, velocity: number=1): void {
-        this._x += deltaX * velocity;
-        this._y += deltaY * velocity;
-        this.children.forEach((child: GameObject) => {
-            child.moveTo(deltaX, deltaY, velocity);
-        });
-    }
+    moveTo(
+        deltaVector: Vector,
+        speed: number = deltaVector.getMagnitude()
+    ): void {
+        if (speed === 0 || deltaVector.getMagnitude() === 0) {
+            return;
+        }
 
-    /**
-     * Sets the position of the game object
-     * @param x position in the X axis
-     * @param y position in the Y axis
-     */
-    public setPosition(x: number, y: number): void {
-        const deltaX = x - this._x;
-        const deltaY = y - this._y;
-
-        this._x = x;
-        this._y = y;
-
-        this.children.forEach((child: GameObject) => {
-            child.moveTo(deltaX, deltaY);
-        });
+        const toMoveVector = Vector.scaleVector(
+            Vector.getUnitVector(deltaVector),
+            speed
+        );
+        this.position = Vector.addVectors(this.position, toMoveVector);
     }
 }

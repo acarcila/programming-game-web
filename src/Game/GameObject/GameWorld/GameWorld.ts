@@ -1,12 +1,13 @@
 import InputController from "../../Input/InputController";
+import Vector from "../../Vector/Vector";
 import GameObject from "../GameObjectImpl";
 import Player from "../Player/Player";
 
 export default class GameWorld extends GameObject {
     private _player: Player;
-    constructor(x: number, y: number, width: number, height: number) {
-        super(x, y, width, height);
-        this._player = new Player(0, 0, 0, 0);
+    constructor(position: Vector, scale: Vector) {
+        super(position, scale);
+        this._player = new Player(new Vector(0, 0), new Vector(0, 0));
     }
 
     get player(): Player {
@@ -20,20 +21,26 @@ export default class GameWorld extends GameObject {
     /**
      * function that is called at the start of the game
      */
-    setUpThis(): void {}
+    setUpThis(): void {
+        // this.velocity.x = this.player.speed;
+    }
 
     /**
      * function that is called at every frame
      */
     updateThis(): void {
+        // if (this.position.x > 500) this.velocity.x = -this.player.speed;
+        // else if (this.position.x < -500) this.velocity.x = this.player.speed;
+
+        this.velocity = new Vector(0, 0);
         if (InputController.isPressed("up"))
-            super.moveTo(0, 1, this.player.speed);
+            this.velocity.y = this.player.speed;
         if (InputController.isPressed("right"))
-            super.moveTo(-1, 0, this.player.speed);
+            this.velocity.x = -this.player.speed;
         if (InputController.isPressed("down"))
-            super.moveTo(0, -1, this.player.speed);
+            this.velocity.y = -this.player.speed;
         if (InputController.isPressed("left"))
-            super.moveTo(1, 0, this.player.speed);
+            this.velocity.x = this.player.speed;
     }
 
     /**
