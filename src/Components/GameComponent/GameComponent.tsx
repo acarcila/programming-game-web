@@ -7,17 +7,21 @@ import EmptyGameObject from '../../Game/GameObject/EmptyGameObject/EmptyGameObje
 import InputController from '../../Game/Input/InputController';
 import GameWorld from '../../Game/GameObject/GameWorld/GameWorld';
 import Player from '../../Game/GameObject/Player/Player';
+import GameInormation from '../../Game/GameInformation/GameInformation';
+import Vector from '../../Game/Vector/Vector';
 
 function GameComponent(): JSX.Element {
     const canvasRef = useRef(null);
 
-    let gameScreen: GameObjectImpl = new EmptyGameObject(0, 0, 0, 0);
-    let gameWorld: GameWorld = new GameWorld(0, 0, 0, 0);
+    let gameScreen: GameObjectImpl = new EmptyGameObject(new Vector(0, 0));
+    let gameWorld: GameWorld = new GameWorld(new Vector(0, 0), new Vector(0, 0));
 
-    const player: Player = new Player(0, 0, 30, 30, 5);
-    const walls: GameObjectImpl = new EmptyGameObject(0, 0, 0, 0);
+    const player: Player = new Player(new Vector(0, 0), new Vector(30, 30), 1000);
+    const walls: GameObjectImpl = new EmptyGameObject(new Vector(0, 0));
 
-    const wall: GameObjectImpl = new Wall(20, 200, 500, 500);
+    const wall: GameObjectImpl = new Wall(new Vector(20, 200), new Vector(500, 500));
+
+    let frameTimestamp = performance.now();
 
     useEffect(() => {
         const canvas: any = canvasRef.current;
@@ -29,6 +33,9 @@ function GameComponent(): JSX.Element {
     }, []);
 
     const animate = () => {
+        GameInormation.fps = 1 / (performance.now() / 1000 - frameTimestamp);
+        frameTimestamp = performance.now() / 1000;
+
         const canvas: any = canvasRef.current;
         const context = canvas.getContext('2d');
 
@@ -41,26 +48,26 @@ function GameComponent(): JSX.Element {
     }
 
     const setUp = (canvas: any, context: any) => {
-        gameScreen.setPosition(canvas.width / 2, canvas.height / 2);
+        gameScreen.position = new Vector(canvas.width / 2, canvas.height / 2);
         gameScreen.addChild(gameWorld);
 
         gameWorld.addChild(walls);
         gameWorld.player = player;
         gameWorld.addChild(player);
 
-        walls.addChild(new Wall(20, 200, 500, 500));
-        walls.addChild(new Wall(1000, 200, 50, 500));
+        walls.addChild(new Wall(new Vector(20, 200), new Vector(500, 500)));
+        walls.addChild(new Wall(new Vector(1000, 200), new Vector(50, 500)));
 
         gameWorld.setUp();
 
-        //player setup
-        player.setPosition(canvas.width / 2, canvas.height / 2);
+        player.position = new Vector(canvas.width / 2, canvas.height / 2);
     }
 
     const update = (canvas: any, context: any) => {
         gameWorld.update();
 
-        gameScreen.setPosition(canvas.width / 2, canvas.height / 2);
+        gameScreen.position = new Vector(canvas.width / 2, canvas.height / 2);
+        console.log(gameScreen);
     }
 
     const render = (canvas: any, context: any) => {
