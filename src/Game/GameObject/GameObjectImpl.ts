@@ -85,10 +85,10 @@ export default abstract class GameObject implements IGameObject {
             );
         }
 
-        this.updateThis();
         this.children.forEach((child) => {
             child.update();
         });
+        this.updateThis();
     }
 
     /**
@@ -101,10 +101,10 @@ export default abstract class GameObject implements IGameObject {
      * @param context the context reference
      */
     public render(context: any): void {
-        this.renderThis(context);
         this.children.forEach((child) => {
             child.render(context);
         });
+        this.renderThis(context);
     }
 
     /**

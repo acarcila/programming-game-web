@@ -16,10 +16,8 @@ function GameComponent(): JSX.Element {
     let gameScreen: GameObjectImpl = new EmptyGameObject(new Vector(0, 0));
     let gameWorld: GameWorld = new GameWorld(new Vector(0, 0), new Vector(0, 0));
 
-    const player: Player = new Player(new Vector(0, 0), new Vector(30, 30), 1000);
+    const player: Player = new Player(new Vector(0, 0), new Vector(30, 30), 30000);
     const walls: GameObjectImpl = new EmptyGameObject(new Vector(0, 0));
-
-    const wall: GameObjectImpl = new Wall(new Vector(20, 200), new Vector(500, 500));
 
     let frameTimestamp = performance.now();
 
@@ -33,13 +31,14 @@ function GameComponent(): JSX.Element {
     }, []);
 
     const animate = () => {
-        GameInormation.fps = 1 / (performance.now() / 1000 - frameTimestamp);
-        frameTimestamp = performance.now() / 1000;
-
         const canvas: any = canvasRef.current;
         const context = canvas.getContext('2d');
 
         setUpCanvas(canvas);
+
+        GameInormation.fps = 1 / (performance.now() / 1000 - frameTimestamp);
+        GameInormation.canvasScale = new Vector(canvas.width, canvas.height);
+        frameTimestamp = performance.now() / 1000;
 
         update(canvas, context);
         render(canvas, context);
@@ -67,7 +66,6 @@ function GameComponent(): JSX.Element {
         gameWorld.update();
 
         gameScreen.position = new Vector(canvas.width / 2, canvas.height / 2);
-        console.log(gameScreen);
     }
 
     const render = (canvas: any, context: any) => {

@@ -1,3 +1,4 @@
+import GameInormation from "../../GameInformation/GameInformation";
 import InputController from "../../Input/InputController";
 import Vector from "../../Vector/Vector";
 import GameObject from "../GameObjectImpl";
@@ -32,15 +33,22 @@ export default class GameWorld extends GameObject {
         // if (this.position.x > 500) this.velocity.x = -this.player.speed;
         // else if (this.position.x < -500) this.velocity.x = this.player.speed;
 
-        this.velocity = new Vector(0, 0);
-        if (InputController.isPressed("up"))
-            this.velocity.y = this.player.speed;
-        if (InputController.isPressed("right"))
-            this.velocity.x = -this.player.speed;
-        if (InputController.isPressed("down"))
-            this.velocity.y = -this.player.speed;
-        if (InputController.isPressed("left"))
-            this.velocity.x = this.player.speed;
+        // this.velocity = new Vector(0, 0);
+        // if (InputController.isPressed("up"))
+        //     this.velocity.y = this.player.speed;
+        // if (InputController.isPressed("right"))
+        //     this.velocity.x = -this.player.speed;
+        // if (InputController.isPressed("down"))
+        //     this.velocity.y = -this.player.speed;
+        // if (InputController.isPressed("left"))
+        //     this.velocity.x = this.player.speed;
+
+        // follow player
+        const deltaVector = Vector.substractVectors(
+            Vector.scaleVector(GameInormation.canvasScale, 1 / 2),
+            this.player.position
+        );
+        this.moveTo(deltaVector);
     }
 
     /**

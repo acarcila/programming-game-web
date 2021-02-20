@@ -1,4 +1,3 @@
-import { Map } from "typescript";
 import KEY_INPUTS from "../../Constants/KeyInputs.json";
 
 export default class InputController {
